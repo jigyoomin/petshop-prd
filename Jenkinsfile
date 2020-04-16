@@ -19,12 +19,12 @@ podTemplate(label:label,
             containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl', ttyEnabled: true, command: 'cat'),
         ],
         volumes: [
-            persistentVolumeClaim(mountPath: '/home/jenkins/.docker', claimName: 'zcp-jenkins-docker-sam-icp4a')
+            persistentVolumeClaim(mountPath: '/home/jenkins/.docker', claimName: 'zcp-jenkins-docker-petshop')
         ]) {
      
         node(label) {
             stage('CHECKOUT') {
-                git 'https://vup-git.cloudzcp.io/sktbmt/sam-zcp-lab.git'
+                checkout scm
             }
             
             stage('ANCHORE EVALUATION') {
@@ -80,9 +80,16 @@ podTemplate(label:label,
                     cluster {
                         echo "Work in ${it.cluster}"
                         sh "kubectl get po -n ${it.namespace}"
-                        kubeCmd.apply file: 'k8s/service.yaml', namespace: it.namespace
-                        yaml.update file: 'k8s/deployment.yaml', update: ['.spec.template.spec.containers[0].image': "${PUBLIC_REGISTRY}/${TARGET_DOCKER_IMAGE}:${VERSION}"]
-                        kubeCmd.apply file: 'k8s/deployment.yaml', namespace: it.namespace, wait: 300
+						
+						if ('skt-bmt'.equals(it.cluster)) {
+							yaml.update file: 'k8s/appsody-application.yaml'
+								, update: ['.spec.applicationImage': "${HARBOR_REGISTRY}/${TARGET_DOCKER_IMAGE}:${VERSION}"]
+							sh "kubectl apply -f k8s/appsody-application.yaml -n ${it.namespace}"
+						} else {
+							kubeCmd.apply file: 'k8s/service.yaml', namespace: it.namespace
+							yaml.update file: 'k8s/deployment.yaml', update: ['.spec.template.spec.containers[0].image': "${PUBLIC_REGISTRY}/${TARGET_DOCKER_IMAGE}:${VERSION}"]
+							kubeCmd.apply file: 'k8s/deployment.yaml', namespace: it.namespace, wait: 300
+						}
                     }
                 }
             }
