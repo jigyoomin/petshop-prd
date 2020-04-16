@@ -82,9 +82,9 @@ podTemplate(label:label,
                         sh "kubectl get po -n ${it.namespace}"
 						
 						if ('skt-bmt'.equals(it.cluster)) {
-							yaml.update file: 'k8s/appsody-application.yaml'
+							yaml.update file: 'k8s/appsody-deploy.yaml'
 								, update: ['.spec.applicationImage': "${HARBOR_REGISTRY}/${TARGET_DOCKER_IMAGE}:${VERSION}"]
-							sh "kubectl apply -f k8s/appsody-application.yaml -n ${it.namespace}"
+							sh "kubectl apply -f k8s/appsody-deploy.yaml -n ${it.namespace}"
 						} else {
 							kubeCmd.apply file: 'k8s/service.yaml', namespace: it.namespace
 							yaml.update file: 'k8s/deployment.yaml', update: ['.spec.template.spec.containers[0].image': "${PUBLIC_REGISTRY}/${TARGET_DOCKER_IMAGE}:${VERSION}"]

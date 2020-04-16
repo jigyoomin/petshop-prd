@@ -1,0 +1,85 @@
+apiVersion: appsody.dev/v1beta1
+kind: AppsodyApplication
+metadata:
+  annotations:
+    architecture: x86_64
+    authoritative-source-url: registry.access.redhat.com
+    build-date: 2019-10-29T16:44:53.794580
+    commit.image.appsody.dev/author: myguddy <seungil.han@gmail.com>
+    commit.image.appsody.dev/committer: myguddy <seungil.han@gmail.com>
+    commit.image.appsody.dev/date: Thu Apr 16 18:21:49 2020 +0900
+    commit.image.appsody.dev/message: petshop dev
+    description: This image is the Kabanero development container for the java-spring-boot2
+      stack
+    distribution-scope: public
+    image.opencontainers.org/created: "2020-04-16T19:25:33+09:00"
+    image.opencontainers.org/documentation: http://bit.hcp.skcloud.io:7990/scm/skthcp/petshop
+    image.opencontainers.org/revision: 6265f0bdb7ddc28c9b08bc2f9d65f403b4e4f5ad-modified
+    image.opencontainers.org/source: http://bit.hcp.skcloud.io:7990/scm/skthcp/petshop/tree/master
+    image.opencontainers.org/url: http://bit.hcp.skcloud.io:7990/scm/skthcp/petshop
+    k8s.io/description: The Universal Base Image is designed and engineered to be
+      the base layer for all of your containerized applications, middleware and utilities.
+      This base image is freely redistributable, but Red Hat only supports Red Hat
+      technologies through subscriptions for Red Hat products. This image is maintained
+      by Red Hat and updated regularly.
+    k8s.io/display-name: Red Hat Universal Base Image 8
+    maintainer: Red Hat, Inc.
+    name: kabanero/java-spring-boot2
+    openshift.io/expose-services: ""
+    openshift.io/tags: base rhel8
+    redhat.com/build-host: cpt-1002.osbs.prod.upshift.rdu2.redhat.com
+    redhat.com/component: ubi8-container
+    redhat.com/license_terms: https://www.redhat.com/en/about/red-hat-end-user-license-agreements#UBI
+    release: "277"
+    stack.appsody.dev/authors: Seungil Han <seungil.han@ibm.com>
+    stack.appsody.dev/configured: docker.io/icp4a/icp4a-spring-boot2:1.0
+    stack.appsody.dev/created: "2020-04-09T13:31:14+09:00"
+    stack.appsody.dev/description: Spring Boot using OpenJ9 and Maven
+    stack.appsody.dev/licenses: Apache-2.0
+    stack.appsody.dev/tag: docker.io/icp4a/icp4a-spring-boot2:1.0.0
+    stack.appsody.dev/title: icp4a-spring-boot2
+    summary: Image for Kabanero java-spring-boot2 development
+    url: https://access.redhat.com/containers/#/registry.access.redhat.com/ubi8/images/8.1-277
+    vcs-ref: c42933bcdbf9f1c232e981a5e40de257c3534c8e
+    vcs-type: git
+    vendor: Kabanero
+    version: 0.3.23
+  creationTimestamp: null
+  labels:
+    image.opencontainers.org/title: petshop
+    stack.appsody.dev/id: icp4a-spring-boot2
+    stack.appsody.dev/version: 1.0.0
+  name: petshop
+spec:
+  serviceAccountName: default
+  applicationImage: image-registry.openshift-image-registry.svc:5000/az-cicd-dev/petshop:548c665e7757098f9ac0aa0c73f894b27fdc9d4c
+  createKnativeService: false
+  expose: true
+  livenessProbe:
+    failureThreshold: 12
+    httpGet:
+      path: /actuator/liveness
+      port: 8080
+    initialDelaySeconds: 5
+    periodSeconds: 2
+  monitoring:
+    endpoints:
+    - path: /actuator/prometheus
+    labels:
+      k8s-app: petshop
+  readinessProbe:
+    failureThreshold: 12
+    httpGet:
+      path: /actuator/health
+      port: 8080
+    initialDelaySeconds: 5
+    periodSeconds: 2
+    timeoutSeconds: 1
+  service:
+    annotations:
+      prometheus.io/path: /actuator/prometheus
+      prometheus.io/scrape: "true"
+    port: 8080
+    type: NodePort
+  stack: icp4a-spring-boot2
+  version: 1.0.0
