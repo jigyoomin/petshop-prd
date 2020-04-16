@@ -13,7 +13,7 @@ def PUBLIC_REGISTRY='068371015812.dkr.ecr.ap-northeast-2.amazonaws.com'
 
 timestamps {
 podTemplate(label:label,
-        serviceAccount: "zcp-system-sa-${USERID}",
+        serviceAccount: "zcp-system-${USERID}",
         containers: [
             containerTemplate(name: 'docker', image: 'earth1223/docker:19-dind-bmt', ttyEnabled: true, command: 'dockerd-entrypoint.sh', privileged: true, alwaysPullImage: true),
             containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl', ttyEnabled: true, command: 'cat'),
