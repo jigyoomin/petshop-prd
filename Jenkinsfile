@@ -28,7 +28,7 @@ podTemplate(label:label,
             }
             
             stage('ANCHORE EVALUATION') {
-                def imageLine = "${INTERNAL_REGISTRY_CREDENTIALS}/${DOCKER_IMAGE}:${DEV_VERSION}"
+                def imageLine = "${INTERNAL_REGISTRY}/${DOCKER_IMAGE}:${DEV_VERSION}"
                 writeFile file: 'anchore_images', text: imageLine
                 try {
                     anchore name: 'anchore_images', engineRetries: '3000', policyBundleId: 'anchore_skt_hcp_bmt'
